@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>卡牌市場彙整系統</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+    :root {
+      --primary-color: #00bfff;
+      --light-blue: #b3ecff;
+      --mid-blue: #66dfff;
+      --dark-blue: #009fdd;
+      --search-bg: #f0faff;
+      --tab-inactive: rgba(102,223,255,0.5);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', Arial, sans-serif;
+      background: linear-gradient(135deg, var(--light-blue), var(--mid-blue));
+      color: #333;
+    }
+    header {
+      background: linear-gradient(135deg, var(--primary-color), var(--dark-blue));
+      padding: 1rem 2rem;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    header h1 {
+      font-weight: 700;
+      font-size: 2.5rem;
+      margin-right: 2rem;
+    }
+    nav {
+      margin-left: auto;
+      margin-right: 2rem;
+      display: flex;
+      align-items: center;
+    }
+    .nav-menu {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .nav-item { position: relative; white-space: nowrap; }
+    .nav-item > a {
+      color: white;
+      text-decoration: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 4px;
+      transition: background 0.3s;
+      white-space: nowrap;
+    }
+    .nav-item > a:hover { background: var(--mid-blue); }
+    .dropdown {
+      display: none;
+      position: absolute;
+      background: var(--mid-blue);
+      list-style: none;
+      border-radius: 4px;
+      top: 100%;
+      left: 0;
+      overflow: hidden;
+      padding: 0.5rem;
+    }
+    .dropdown li { margin-bottom: 0.5rem; }
+    .dropdown li:last-child { margin-bottom: 0; }
+    .nav-item:hover .dropdown { display: block; }
+    .dropdown li a {
+      display: block;
+      padding: 0.5rem 1rem;
+      color: #004d66;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .dropdown li a:hover { background: rgba(0,0,0,0.1); }
+
+    .container {
+      padding: 2rem;
+      background: white;
+      max-width: 800px;
+      margin: 2rem auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .search-box {
+      border: 1px solid var(--mid-blue);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      overflow: hidden;
+      background: var(--tab-inactive);
+      margin-bottom: 0;
+    }
+    .search-tabs { display: flex; }
+    .search-tabs button {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      border: none;
+      background: var(--search-bg);
+      color: #004d66;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s;
+      white-space: nowrap;
+    }
+    .search-tabs button.active {
+      background: var(--tab-inactive);
+      color: #004d66;
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.8rem 1.5rem;
+      border: none;
+      font-size: 1rem;
+      background: var(--tab-inactive);
+    }
+    .search-input:focus { outline: none; box-shadow: none; border: none; }
+
+    .results-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1rem;
+      justify-content: center;
+      padding: 1.5rem 2rem;
+      max-width: 1200px;
+      margin: 2rem auto;
+    }
+    .card-result {
+      background: #eef9ff;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      text-align: center;
+      padding: 0.5rem;
+      transition: transform 0.2s ease;
+    }
+    .card-result:hover {
+      transform: scale(1.03);
+    }
+    .card-result img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+    .card-info {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+    .card-name {
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
+    .card-code {
+      font-size: 0.8rem;
+      color: #777;
+      margin-bottom: 0.3rem;
+    }
+    .card-price {
+      color: #007b5e;
+      font-weight: 600;
+    }
+    .card-stock {
+      font-size: 0.85rem;
+      color: #555;
+    }
+    img[loading="lazy"] {
+      transition: opacity 0.3s ease-in;
+      opacity: 0;
+    }
+    img[loading="lazy"]:not([src=""]) {
+      opacity: 1;
+    }
+    footer {
+      background: var(--dark-blue);
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      margin-top: 1rem;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>卡牌市場彙整系統</h1>
+    <nav>
+      <ul class="nav-menu">
+        <li class="nav-item"><a href="index.html">首頁</a></li>
+        <li class="nav-item">
+          <a href="category.html">關於</a>
+          <ul class="dropdown">
+            <li><a href="category.html?type=women">成立緣由</a></li>
+            <li><a href="category.html?type=men">使用方式</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="newest.html">商品</a>
+          <ul class="dropdown">
+            <li><a href="newest.html?filter=week">系列卡表</a></li>
+            <li><a href="newest.html?filter=coming">待發售產品情報</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a href="contact.html">聯絡我們</a>
+          <ul class="dropdown">
+            <li><a href="contact.html#email">客服信箱</a></li>
+            <li><a href="contact.html#faq">常見問題</a></li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </header>
+  <div class="container">
+    <div class="search-box">
+      <div class="search-tabs">
+        <button id="by-name" class="active">依卡片名稱搜尋</button>
+        <button id="by-series">依系列搜尋</button>
+      </div>
+      <input type="text" id="search-input" class="search-input" placeholder="請輸入關鍵字…" />
+    </div>
+  </div>
+  <div class="results-container" id="results"></div>
+  <footer>
+    <p>&copy; 2025 資料庫期末專題</p>
+  </footer>
+  <script>
+    const btnName = document.getElementById('by-name');
+    const btnSeries = document.getElementById('by-series');
+    const input = document.getElementById('search-input');
+    const results = document.getElementById('results');
+    let mode = 'name';
+
+    btnName.addEventListener('click', () => {
+      mode = 'name';
+      btnName.classList.add('active');
+      btnSeries.classList.remove('active');
+      input.placeholder = '請輸入卡片名稱…';
+      results.innerHTML = '';
+    });
+    btnSeries.addEventListener('click', () => {
+      mode = 'series';
+      btnSeries.classList.add('active');
+      btnName.classList.remove('active');
+      input.placeholder = '請輸入系列名稱…';
+      results.innerHTML = '';
+    });
+
+    let debounceTimer = null;
+
+    input.addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        const query = input.value.trim();
+        if (!query) {
+          results.innerHTML = '';
+          return;
+        }
+
+        fetch(`/api/search?q=${encodeURIComponent(query)}&mode=${mode}`)
+          .then(res => res.json())
+          .then(data => {
+            const html = data.length ? data.map(card => `
+              <div class="card-result">
+                <img src="${card.image_url}" alt="${card.name}" loading="lazy">
+                <div class="card-info">
+                  <div class="card-name">${card.name}</div>
+                  <div class="card-code">${card.code}</div>
+                  <div class="card-price">價格：${card.price}</div>
+                  <div class="card-stock">庫存：${card.stock}</div>
+                </div>
+              </div>
+            `).join('') : '<p>查無資料</p>';
+
+            results.innerHTML = html;
+          });
+      }, 300); // 延遲 300ms 執行（可調整）
+    });
+  </script>
+</body>
+</html>
