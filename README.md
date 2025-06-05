@@ -8,15 +8,15 @@
 ## 📁 專案結構
 
 專案根目錄/
-├── __pycache__/           # Python 編譯後快取檔案
-├── scraper/               # 網路爬蟲模組
-├── static/                # 靜態檔案（如 CSS、JS、圖片等）
-├── templates/             # HTML 模板（用於網頁渲染）
-├── app.py                 # Flask 應用程式主入口
-├── database.py            # 資料庫操作相關程式碼
-├── scraper_main.py        # 網路爬蟲模組整合及執行
-├── README.md              # 專案說明文件
-└── sql_commend.txt        # SQL 指令記錄
+├── pycache/ # Python 編譯後快取檔案
+├── scraper/ # 網路爬蟲模組
+├── static/ # 靜態檔案（如 CSS、JS、圖片等）
+├── templates/ # HTML 模板（用於網頁渲染）
+├── app.py # Flask 應用程式主入口
+├── database.py # 資料庫操作相關程式碼
+├── scraper_main.py # 網路爬蟲模組整合及執行
+├── README.md # 專案說明文件
+└── sql_commend.txt # SQL 指令記錄
 
 
 ## 🚀 安裝與執行方式
@@ -33,4 +33,7 @@ pip install requests beautifulsoup4 mysql-connector-python flask pandas schedule
 
 ### 3. 執行方式
 
-python scraper_main.py -> python app.py
+```bash
+python scraper_main.py 
+python app.py
+```
