@@ -7,12 +7,12 @@ def scrape_series():
     url = 'https://ws-tcg.com/cardlist/'
     headers = {'User-Agent': 'Mozilla/5.0'}
     response = requests.get(url, headers=headers)
-    print(f"🌐 狀態碼：{response.status_code}")
+    print(f"狀態碼：{response.status_code}")
     response.encoding = 'utf-8'
 
     soup = BeautifulSoup(response.text, 'html.parser')
     series_links = soup.select("a[onclick^=showTitleNumberDetail]")
-    print(f"🗂 抓到系列數：{len(series_links)}")
+    print(f"抓到系列數：{len(series_links)}")
 
     series_data = []
     for a in series_links:
@@ -26,7 +26,7 @@ def scrape_series():
             raw_codes = onclick.split("'")[1]  # e.g. '##abc##def##ghi##'
             code_list = [code for code in raw_codes.split('##') if code]  # 去除空白，分離代號
         except IndexError:
-            print(f"⚠️ 無法解析 onclick: {onclick}")
+            print(f"無法解析 onclick: {onclick}")
             continue
 
         for code in code_list:
@@ -35,18 +35,18 @@ def scrape_series():
     return series_data
 
 def run_series_scraper():
-    print("🚀 啟動系列爬蟲程式")
+    print("啟動系列爬蟲程式")
     conn = connect_db()
     if not conn:
-        print("❌ 資料庫連線失敗")
+        print("資料庫連線失敗")
         return
 
     clear_series_table(conn)
     series = scrape_series()
-    print(f"✅ 實際抓到 {len(series)} 筆系列資料")
+    print(f"實際抓到 {len(series)} 筆系列資料")
 
     for name, code in series:
         insert_series(conn, name, code)
 
     conn.close()
-    print("✅ 系列資料寫入完成，資料庫連線已關閉")
+    print("系列資料寫入完成，資料庫連線已關閉")

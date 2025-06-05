@@ -13,10 +13,10 @@ def connect_db():
             database='yuyutei',
             charset='utf8mb4'
         )
-        print("🧪 正在嘗試連接 MySQL...")
+        print("正在嘗試連接 MySQL...")
         return conn
     except Error as e:
-        print(f"❌ 資料庫連線錯誤：{e}")
+        print(f"資料庫連線錯誤：{e}")
         return None
 
 # 清空 cards 資料表
@@ -25,9 +25,9 @@ def clear_table(conn):
         cursor = conn.cursor()
         cursor.execute("TRUNCATE TABLE cards")
         conn.commit()
-        print("🧹 資料表 cards 已清空")
+        print("資料表 cards 已清空")
     except Error as e:
-        print(f"❌ 清空 cards 資料表失敗：{e}")
+        print(f"清空 cards 資料表失敗：{e}")
 
 # 插入 card資料
 def insert_card(conn, name, price, image_url, stock, code):
@@ -39,7 +39,7 @@ def insert_card(conn, name, price, image_url, stock, code):
             """, (name, price, image_url, stock, code))
         conn.commit()
     except Error as e:
-        print(f"❌ 插入卡片資料失敗：{e}")
+        print(f"插入卡片資料失敗：{e}")
 
 # 清空 series 資料表
 def clear_series_table(conn):
@@ -47,9 +47,9 @@ def clear_series_table(conn):
         cursor = conn.cursor()
         cursor.execute("TRUNCATE TABLE series")
         conn.commit()
-        print("🧹 系列資料表已清空")
+        print("系列資料表已清空")
     except Error as e:
-        print(f"❌ 清空系列資料表失敗：{e}")
+        print(f"清空系列資料表失敗：{e}")
 
 # 插入 serie 資料
 def insert_series(conn, name, code):
@@ -61,7 +61,7 @@ def insert_series(conn, name, code):
         """, (name, code))
         conn.commit()
     except Error as e:
-        print(f"❌ 插入系列資料失敗：{e}")
+        print(f"插入系列資料失敗：{e}")
 
 # 清空 yuyutei_series_links 資料表
 def clear_yuyutei_series_links(conn):
@@ -69,9 +69,9 @@ def clear_yuyutei_series_links(conn):
         cursor = conn.cursor()
         cursor.execute("TRUNCATE TABLE yuyutei_series_links")
         conn.commit()
-        print("🧹 yuyutei_series_links 資料表已清空")
+        print("yuyutei_series_links 資料表已清空")
     except Error as e:
-        print(f"❌ 清空 yuyutei_series_links 失敗：{e}")
+        print(f"清空 yuyutei_series_links 失敗：{e}")
 
 # 插入 yuyutei_series_links 資料
 def insert_yuyutei_series_link(conn, name, url):
@@ -83,4 +83,4 @@ def insert_yuyutei_series_link(conn, name, url):
         """, (name, url))
         conn.commit()
     except Error as e:
-        print(f"❌ 插入 yuyutei_series_links 失敗：{e}")
+        print(f"插入 yuyutei_series_links 失敗：{e}")

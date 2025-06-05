@@ -7,7 +7,7 @@ def scrape_yuyutei_series_links():
     url = 'https://yuyu-tei.jp/top/ws'
     headers = {'User-Agent': 'Mozilla/5.0'}
     response = requests.get(url, headers=headers)
-    print(f"🌍 狀態碼：{response.status_code}")
+    print(f"狀態碼：{response.status_code}")
     response.encoding = 'utf-8'
 
     soup = BeautifulSoup(response.text, 'html.parser')
@@ -18,7 +18,7 @@ def scrape_yuyutei_series_links():
         name = a.text.strip()
         href = a.get('href')
 
-        # ✅ 只保留含有 '#kana' 的連結
+        # 只保留含有 '#kana' 的連結
         if not href or '#kana' not in href:
             continue
 
@@ -36,17 +36,17 @@ def scrape_yuyutei_series_links():
 def run_yuyutei_top_scraper():
     from database import connect_db, clear_yuyutei_series_links, insert_yuyutei_series_link
 
-    print("🚀 開始爬取 YUYU-TEI 系列連結")
+    print("開始爬取 YUYU-TEI 系列連結")
     conn = connect_db()
     if not conn:
         return
 
     clear_yuyutei_series_links(conn)
     data = scrape_yuyutei_series_links()
-    print(f"🔗 擷取 {len(data)} 筆資料")
+    print(f"擷取 {len(data)} 筆資料")
 
     for item in data:
         insert_yuyutei_series_link(conn, item['name'], item['url'])
 
     conn.close()
-    print("✅ 系列連結已寫入完成")
+    print("系列連結已寫入完成")
