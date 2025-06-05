@@ -3,40 +3,38 @@ from database import connect_db
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route('/')
 def index():
-    return render_template("index.html")
+    return render_template('index.html')
 
-@app.route("/api/search")
-def search_cards():
-    keyword = request.args.get("q", "").strip().lower()
-    mode = request.args.get("mode", "name")
-
-    if not keyword:
-        return jsonify([])
+@app.route('/api/search')
+def search():
+    query = request.args.get('q', '').strip()
+    mode = request.args.get('mode', 'card')  # 預設為 card 模式
 
     conn = connect_db()
-    if not conn:
-        return jsonify([])
-
     cursor = conn.cursor(dictionary=True)
 
-    if mode == "series":
-        # 你之後可以另外實作 series 搜尋條件
-        query = "SELECT name, price, image_url, stock, code FROM cards WHERE LOWER(name) LIKE %s"
-        cursor.execute(query, (f"%{keyword}%",))
-    else:
-        # 同時搜尋 name 和 code 欄位
-        query = """
-            SELECT name, price, image_url, stock, code
-            FROM cards
-            WHERE LOWER(name) LIKE %s OR LOWER(code) LIKE %s
+    if mode == 'series':
+        sql = """
+        SELECT * FROM series
+        WHERE name LIKE %s OR unique_code LIKE %s
         """
-        cursor.execute(query, (f"%{keyword}%", f"%{keyword}%"))
+        like_query = f"%{query}%"
+        cursor.execute(sql, (like_query, like_query))
+        data = cursor.fetchall()
 
-    results = cursor.fetchall()
+    else:  # 預設卡片搜尋
+        sql = """
+        SELECT * FROM cards
+        WHERE name LIKE %s OR code LIKE %s
+        """
+        like_query = f"%{query}%"
+        cursor.execute(sql, (like_query, like_query))
+        data = cursor.fetchall()
+
     conn.close()
-    return jsonify(results)
+    return jsonify(data)
 
 
 
