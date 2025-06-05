@@ -10,32 +10,45 @@ def index():
 @app.route('/api/search')
 def search():
     query = request.args.get('q', '').strip()
-    mode = request.args.get('mode', 'card')  # 預設為 card 模式
+    mode = request.args.get('mode', 'name')
+
+    if not query:
+        return jsonify([])
 
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
     if mode == 'series':
         sql = """
-        SELECT * FROM series
-        WHERE name LIKE %s OR unique_code LIKE %s
+        SELECT name, code, price, stock, image_url
+        FROM cards
+        WHERE code LIKE %s
+        LIMIT 100
         """
-        like_query = f"%{query}%"
-        cursor.execute(sql, (like_query, like_query))
-        data = cursor.fetchall()
-
-    else:  # 預設卡片搜尋
+        cursor.execute(sql, (f"{query}%",)) 
+    else:
         sql = """
-        SELECT * FROM cards
+        SELECT c.name, c.code, c.price, c.stock, c.image_url 
+        FROM cards c
         WHERE name LIKE %s OR code LIKE %s
+        LIMIT 100
         """
-        like_query = f"%{query}%"
-        cursor.execute(sql, (like_query, like_query))
-        data = cursor.fetchall()
+        cursor.execute(sql, (f"%{query}%", f"%{query}%"))
 
+    result = cursor.fetchall()
+    cursor.close()
     conn.close()
-    return jsonify(data)
+    return jsonify(result)
 
+@app.route('/api/series_list')
+def get_series_list():
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("SELECT code, name FROM series ORDER BY name")
+    result = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(result)
 
 
 if __name__ == "__main__":
