@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btnSeries.classList.remove('active');
       input.style.display = 'block';
       select.style.display = 'none';
+      input.value = '';          // 切回名稱搜尋時清空輸入框
       results.innerHTML = '';
     });
 
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
       btnName.classList.remove('active');
       input.style.display = 'none';
       select.style.display = 'block';
+      select.selectedIndex = 0;  // 選單回到第一項
       results.innerHTML = '';
 
       if (select.options.length === 1) {
@@ -94,6 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
               `).join('')
             : '<p>查無資料</p>';
           results.innerHTML = html;
+          enableCardHoverZoom();
         })
         .catch(err => {
           console.error('搜尋失敗：', err);
@@ -121,5 +124,24 @@ document.addEventListener('DOMContentLoaded', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   }
-  console.log('🔧 main.js 已載入並執行');
+
+  function enableCardHoverZoom() {
+    document.querySelectorAll('.card-result').forEach(card => {
+      let zoomTimer = null;
+
+      card.addEventListener('mouseenter', () => {
+        zoomTimer = setTimeout(() => {
+          card.classList.add('zoomed');
+        }, 250); // 停 250ms 才放大，可依喜好調整
+      });
+
+      card.addEventListener('mouseleave', () => {
+        clearTimeout(zoomTimer);
+        card.classList.remove('zoomed');
+      });
+    });
+  }
 });
+
+
+

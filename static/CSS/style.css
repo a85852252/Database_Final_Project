@@ -370,7 +370,7 @@ header .user-logged-in:hover .user-dropdown {
     overflow: hidden;
     text-align: center;
     padding: 0.5rem;
-    transition: transform 0.2s ease;
+    transition: transform 0.3s cubic-bezier(0.36,0.6,0.3,1), box-shadow 0.2s; 
 }
 .card-result:hover {
     transform: scale(1.03);
@@ -380,6 +380,11 @@ header .user-logged-in:hover .user-dropdown {
     height: auto;
     border-radius: 6px;
     margin-bottom: 0.5rem;
+}
+.card-result.zoomed {
+  transform: scale(1.5);
+  z-index: 10;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.18);
 }
 .card-info {
     display: flex;

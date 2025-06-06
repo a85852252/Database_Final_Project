@@ -9,6 +9,10 @@ def index():
     username = session.get('username')
     return render_template('index.html', username=username)
 
+@app.before_request
+def make_session_not_permanent():
+    session.permanent = False
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -44,9 +48,7 @@ def register():
 
     return render_template('register.html')
 
-
-
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['GET', 'POST']) 
 def login():
     if request.method == 'POST':
         username = request.form.get('username', '').strip()
@@ -63,6 +65,7 @@ def login():
         if user:
             session['user_id'] = user['id']
             session['username'] = user['username']
+            session.permanent = False    
             flash(f'歡迎回來，{user["username"]}！', 'success')
             return redirect(url_for('index'))
         else:
