@@ -6,20 +6,17 @@ app.secret_key = 'qwertyuiop'
 
 @app.route('/')
 def index():
-    # 將 session 裡的使用者名稱傳給 template，讓它知道是否已登入
     username = session.get('username')
     return render_template('index.html', username=username)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        # 從表單取得輸入
         username = request.form.get('username', '').strip()
         email = request.form.get('email', '').strip()
         password = request.form.get('password', '')
         password2 = request.form.get('password2', '')
 
-        # 簡單前端驗證：確認都有人填，以及密碼兩次是否相同
         if not username or not email or not password or not password2:
             flash('請填寫所有欄位', 'danger')
             return redirect(url_for('register'))
@@ -32,7 +29,6 @@ def register():
             flash('無法連接資料庫，請稍後再試', 'danger')
             return redirect(url_for('register'))
 
-        # 嘗試建立新帳號
         result = create_user(conn, username, email, password)
         conn.close()
 
@@ -40,14 +36,12 @@ def register():
             flash('註冊成功，請登入', 'success')
             return redirect(url_for('login'))
         else:
-            # 如果 result 是字串，表示錯誤訊息（例如重複鍵值錯誤）
             if '1062' in result:
                 flash('使用者名稱或 Email 已被註冊', 'danger')
             else:
                 flash('註冊失敗：' + result, 'danger')
             return redirect(url_for('register'))
 
-    # GET 進到註冊頁面時，就顯示表單
     return render_template('register.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -65,7 +59,6 @@ def login():
         conn.close()
 
         if user:
-            # 登入成功，將使用者資訊儲存在 session
             session['user_id'] = user['id']
             session['username'] = user['username']
             flash(f'歡迎回來，{user["username"]}！', 'success')
@@ -74,12 +67,11 @@ def login():
             flash('帳號或密碼錯誤', 'danger')
             return redirect(url_for('login'))
 
-    # GET 進到登入頁面時，顯示登入表單
     return render_template('login.html')
 
 @app.route('/logout')
 def logout():
-    session.clear()  # 清空整個 session
+    session.clear() 
     flash('已成功登出', 'info')
     return redirect(url_for('index'))
 

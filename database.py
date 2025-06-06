@@ -85,10 +85,6 @@ def insert_yuyutei_series_link(conn, name, url):
         print(f"插入 yuyutei_series_links 失敗：{e}")
 
 def create_user(conn, username, email, password_plaintext):
-    """
-    在 users 表中新增一筆使用者，並將密碼明文哈希後儲存。
-    傳回 True 或者錯誤訊息字串。
-    """
     try:
         pw_hash = generate_password_hash(password_plaintext)
         cursor = conn.cursor()
@@ -99,14 +95,9 @@ def create_user(conn, username, email, password_plaintext):
         conn.commit()
         return True
     except Error as e:
-        # 如果重複 username/email，就會丟出 1062 錯誤
         return str(e)
 
 def get_user_by_username(conn, username):
-    """
-    依據 username 回傳該使用者資料（id, username, email, password_hash）。
-    如果找不到回傳 None。
-    """
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM users WHERE username = %s", (username,))
     user = cursor.fetchone()
@@ -114,9 +105,6 @@ def get_user_by_username(conn, username):
     return user
 
 def get_user_by_email(conn, email):
-    """
-    依據 email 回傳該使用者資料。
-    """
     cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM users WHERE email = %s", (email,))
     user = cursor.fetchone()
@@ -124,12 +112,6 @@ def get_user_by_email(conn, email):
     return user
 
 def verify_user(conn, username, password_plaintext):
-    """
-    驗證使用者帳號與密碼是否符合。
-    1. 用 get_user_by_username 找到該 user
-    2. 對比 password_hash
-    如果成功，回傳 user dictionary；否則回傳 None。
-    """
     user = get_user_by_username(conn, username)
     if not user:
         return None

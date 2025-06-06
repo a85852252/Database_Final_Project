@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('scroll', () => {
     if (window.scrollY > 300) {
-      backToTop.style.display = 'flex';  // Flexbox 模式下用 'flex'
+      backToTop.style.display = 'flex';  
       backToTop.style.opacity = '1';
     } else {
       backToTop.style.opacity = '0';
