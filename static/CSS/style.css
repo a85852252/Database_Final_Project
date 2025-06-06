@@ -173,6 +173,34 @@ img[loading="lazy"] {
 img[loading="lazy"]:not([src=""]) {
     opacity: 1;
 }
+
+#back-to-top {
+  position: fixed;
+  bottom: 40px;              /* 底部距離，可以自行調整 */
+  right: 40px;               /* 右側距離，可以自行調整 */
+  width: 60px;               /* 按鈕寬度 */
+  height: 60px;              /* 按鈕高度 */
+  background: var(--primary-color);  /* 使用你在 :root 定義的主色 */
+  color: white;
+  font-size: 20px;
+  text-align: center;
+  line-height: 40px;         /* 讓文字垂直置中 */
+  border-radius: 50%;        /* 圓形按鈕 */
+  cursor: pointer;
+  display: none;             /* 預設隱藏，滾動後才顯示 */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  z-index: 1000;             /* 讓按鈕置頂，不會被其他元素遮住 */
+  transition: background 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  justify-content: center;
+  align-items: center;
+}
+
+/* 懸停時改變背景色（可按需微調） */
+#back-to-top:hover {
+  background: var(--mid-blue);
+  opacity: 0.9;
+}
+
 footer {
     background: var(--dark-blue);
     color: white;

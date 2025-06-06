@@ -11,7 +11,7 @@
     <h1>卡牌市場彙整系統</h1>
     <nav>
       <ul class="nav-menu">
-        <li class="nav-item"><a href="index.html">首頁</a></li>
+        <li class="nav-item"><a href="{{ url_for('index') }}">首頁</a></li>
         <li class="nav-item">
           <a href="category.html">關於</a>
           <ul class="dropdown">
@@ -39,6 +39,7 @@
   <main>
     {% block content %}{% endblock %}
   </main>
+  <div id="back-to-top" title="回到頂部">TOP</div>
   <footer>
     <p>&copy; 2025 資料庫期末專題</p>
   </footer>

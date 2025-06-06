@@ -79,3 +79,25 @@ select.addEventListener('change', () => {
   }
   performSearch(query);
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const backToTop = document.getElementById('back-to-top');
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      backToTop.style.display = 'flex';  // Flexbox 模式下用 'flex'
+      backToTop.style.opacity = '1';
+    } else {
+      backToTop.style.opacity = '0';
+      setTimeout(() => {
+        if (window.scrollY <= 300) {
+          backToTop.style.display = 'none';
+        }
+      }, 200);
+    }
+  });
+
+  backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+});
