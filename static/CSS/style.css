@@ -16,47 +16,235 @@ body {
     padding: 0;
 }
 header {
-    background: linear-gradient(135deg, var(--primary-color), var(--dark-blue));
-    padding: 1rem 2rem;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 2rem;
+  background: linear-gradient(135deg, var(--primary-color), var(--dark-blue));
+  color: white;
+  position: relative; /* 方便下拉選單用 */
 }
-header h1 {
-    font-weight: 700;
-    font-size: 2.5rem;
-    margin-right: 2rem;
+header .logo h1 {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 700;
 }
-nav {
-    margin-left: auto;
-    margin-right: 2rem;
-    display: flex;
-    align-items: center;
+header nav {
+  margin-left: auto;
 }
-.nav-menu {
-    list-style: none;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
+header nav .nav-menu {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
 }
-.nav-item { position: relative; white-space: nowrap; }
-.nav-item > a {
-    color: white;
-    text-decoration: none;
-    padding: 0.7rem 1.2rem;
-    border-radius: 4px;
-    transition: background 0.3s;
-    white-space: nowrap;
+header nav .nav-item {
+  position: relative;
 }
-.nav-item > a:hover { background: var(--mid-blue); }
+header nav .nav-item > a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+header nav .nav-item > a:hover {
+  background: var(--mid-blue);
+}
 
-.flash-messages { list-style: none; padding: 0; margin: 1rem 2rem; }
-.flash { padding: 0.5rem 1rem; border-radius: 4px; margin-bottom: 0.5rem; }
-.flash.success { background: #d4edda; color: #155724; }
-.flash.danger { background: #f8d7da; color: #721c24; }
-.flash.warning { background: #fff3cd; color: #856404; }
-.flash.info { background: #d1ecf1; color: #0c5460; }
+header nav .dropdown {
+  display: none;
+  position: absolute;
+  background: var(--mid-blue);
+  list-style: none;
+  border-radius: 4px;
+  top: 100%;
+  left: 0;
+  padding: 0.5rem;
+}
+
+header nav .nav-item:hover .dropdown {
+  display: block;
+}
+
+header nav .dropdown li {
+  margin-bottom: 0.5rem;
+}
+
+header nav .dropdown li:last-child {
+  margin-bottom: 0;
+}
+
+header nav .dropdown li a {
+  display: block;
+  padding: 0.5rem 1rem;
+  color: #004d66;
+  text-decoration: none;
+}
+
+header nav .dropdown li a:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+header .user-area {
+  margin-left: 1.5rem;  /* nav 與 user-area 之間稍微留白 */
+  display: flex;
+  align-items: center;
+}
+
+/* 使用者圖示（共用） */
+header .user-area .user-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 0.4rem;
+}
+
+/* ===== 未登入時 ===== */
+header .user-not-logged-in {
+  display: flex;
+  align-items: center;
+}
+
+header .user-not-logged-in .login-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+header .user-not-logged-in .login-link:hover {
+  color: #dff;
+}
+
+header .user-logged-in {
+  position: relative;  /* 讓下拉選單使用絕對定位時，參考此容器 */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+header .user-logged-in .username {
+  color: white;
+  font-weight: 600;
+  margin-right: 0.4rem;
+  white-space: nowrap;
+}
+
+/* 下拉選單：預設隱藏 */
+header .user-logged-in .user-dropdown {
+  display: none;
+  position: absolute;
+  top: 120%;          /* 距離 user-logged-in 底部一點 */
+  right: 0;
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  z-index: 500;
+  min-width: 120px;   /* 最小寬度，可自行調整 */
+}
+
+header .user-logged-in .user-dropdown ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+header .user-logged-in .user-dropdown ul li {
+  border-bottom: 1px solid #eee;
+}
+
+header .user-logged-in .user-dropdown ul li:last-child {
+  border-bottom: none;
+}
+
+header .user-logged-in .user-dropdown ul li a {
+  display: block;
+  padding: 0.6rem 1rem;
+  color: #333;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+header .user-logged-in .user-dropdown ul li a:hover {
+  background: #f5f5f5;
+}
+
+header .user-logged-in:hover .user-dropdown {
+  display: block;
+}
+
+/* 可選：在小螢幕時，把 user-area 的位置做調整 */
+@media (max-width: 768px) {
+  .user-area {
+    top: 0.8rem;
+    right: 1rem;
+  }
+  .user-logged-in .username {
+    display: none;  /* 如果螢幕太窄，只顯示圖示、不顯示文字 */
+  }
+}
+
+#flash-messages {
+  list-style: none;
+  margin: 1rem auto;
+  padding: 0;
+  max-width: 600px;
+}
+
+#flash-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+
+/* 中央白底提示框 */
+#flash-box {
+  background: #fff;
+  padding: 1.5rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.flash {
+  padding: 0.6rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  opacity: 1; 
+  transition: opacity 0.5s ease-in-out; 
+}
+
+#flash-box .flash {
+  margin: 0.5rem 0;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+#flash-box .flash.success {
+  color: #155724;
+}
+#flash-box .flash.danger {
+  color: #721c24;
+}
+#flash-box .flash.warning {
+  color: #856404;
+}
+#flash-box .flash.info {
+  color: #0c5460;
+}
+
+#flash-box .flash.fade-out {
+  opacity: 0;
+}
 
 .form-container {
   background: white;

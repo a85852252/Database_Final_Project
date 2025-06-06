@@ -4,64 +4,84 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}卡牌市場彙整系統{% endblock %}</title>
+  <!-- 請確認這條路徑正確，指向你的 CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+  <!-- ======== Header (導覽列 + 使用者登入/登出區) ======== -->
   <header>
-    <h1>卡牌市場彙整系統</h1>
+    <div class="logo">
+      <h1>卡牌市場彙整系統</h1>
+    </div>
+
+    <!-- 讓 nav 靠右，可用 margin-left:auto 推動 -->
     <nav>
       <ul class="nav-menu">
         <li class="nav-item"><a href="{{ url_for('index') }}">首頁</a></li>
         <li class="nav-item">
-          <a href="category.html">關於</a>
+          <a href="#">關於</a>
           <ul class="dropdown">
-            <li><a href="category.html?type=women">成立緣由</a></li>
-            <li><a href="category.html?type=men">使用方式</a></li>
+            <li><a href="#">成立緣由</a></li>
+            <li><a href="#">使用方式</a></li>
           </ul>
         </li>
         <li class="nav-item">
-          <a href="newest.html">商品</a>
+          <a href="#">商品</a>
           <ul class="dropdown">
-            <li><a href="newest.html?filter=week">系列卡表</a></li>
-            <li><a href="newest.html?filter=coming">待發售產品情報</a></li>
+            <li><a href="#">系列卡表</a></li>
+            <li><a href="#">待發售情報</a></li>
           </ul>
         </li>
-        <li class="nav-item">
-          <a href="contact.html">聯絡我們</a>
-          <ul class="dropdown">
-            <li><a href="contact.html#email">客服信箱</a></li>
-            <li><a href="contact.html#faq">常見問題</a></li>
-          </ul>
-        </li>
+        <li class="nav-item"><a href="#">聯絡我們</a></li>
       </ul>
     </nav>
+
+    <!-- 使用者區塊 -->
     <div class="user-area">
       {% if session.username %}
-        <span>歡迎，{{ session.username }}！</span>
-        <a href="{{ url_for('logout') }}">登出</a>
+        <!-- 已登入：顯示圖示 + 使用者名稱 + 下拉登出選單 -->
+        <div class="user-logged-in">
+          <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="User Icon" class="user-icon">
+          <span class="username">{{ session.username }}</span>
+          <div class="user-dropdown">
+            <ul>
+              <li><a href="{{ url_for('logout') }}">登出</a></li>
+            </ul>
+          </div>
+        </div>
       {% else %}
-        <a href="{{ url_for('login') }}">登入</a> |
-        <a href="{{ url_for('register') }}">註冊</a>
+        <!-- 未登入：顯示圖示 + 登入連結 -->
+        <div class="user-not-logged-in">
+          <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="User Icon" class="user-icon">
+          <a href="{{ url_for('login') }}" class="login-link">登入</a>
+        </div>
       {% endif %}
     </div>
   </header>
+
   <main>
+    {# ========= Flash 訊息的遮罩層 ========= #}
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        <ul class="flash-messages">
-          {% for category, msg in messages %}
-            <li class="flash {{ category }}">{{ msg }}</li>
-          {% endfor %}
-        </ul>
+        <div id="flash-overlay">
+          <div id="flash-box">
+            {% for category, msg in messages %}
+              <p class="flash {{ category }}" data-flash>{{ msg }}</p>
+            {% endfor %}
+          </div>
+        </div>
       {% endif %}
     {% endwith %}
 
+    {# 各子頁面內容會被置入此區塊 #}
     {% block content %}{% endblock %}
   </main>
-  <div id="back-to-top" title="回到頂部">TOP</div>
+
   <footer>
     <p>&copy; 2025 資料庫期末專題</p>
   </footer>
+
+  <!-- 請確認這路徑正確指向你的 main.js -->
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
