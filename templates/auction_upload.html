@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}上架商品{% endblock %}
+{% block content %}
+<div class="container">
+  <h2>上架商品</h2>
+  <form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+      <label>商品名稱</label>
+      <input type="text" name="name" class="form-control" maxlength="64" required>
+    </div>
+    <div class="form-group">
+      <label>商品說明</label>
+      <textarea name="description" class="form-control" rows="4"></textarea>
+    </div>
+    <div class="form-group">
+      <label>價格（元）</label>
+      <input type="number" name="price" class="form-control" step="1" min="0" required>
+    </div>
+    <div class="form-group">
+      <label>商品圖片（可複數選擇）</label>
+      <input type="file" name="images" class="form-control" accept="image/*" multiple required>
+      <div id="image-preview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;"></div>
+    </div>
+    <div class="form-group">
+      <label>商品標籤（可複選）</label>
+      <div>
+        {% for tag in all_tags %}
+          <label style="margin-right:1rem;">
+            <input type="checkbox" name="tags" value="{{ tag.id }}"> {{ tag.name }}
+          </label>
+        {% endfor %}
+      </div>
+    </div>
+    <button type="submit" class="btn">上架商品</button>
+  </form>
+</div>
+{% endblock %}

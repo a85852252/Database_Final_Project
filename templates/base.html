@@ -23,10 +23,10 @@
           </ul>
         </li>
         <li class="nav-item">
-          <a href="#">商品</a>
+          <a href="#">拍賣場</a>
           <ul class="dropdown">
-            <li><a href="#">系列卡表</a></li>
-            <li><a href="#">待發售情報</a></li>
+            <li><a href="{{ url_for('auction.auction_list') }}">賣場總覽</a></li>
+            <li><a href="{{ url_for('auction.auction_upload') }}">上架商品</a></li>
           </ul>
         </li>
         <li class="nav-item"><a href="#">聯絡我們</a></li>

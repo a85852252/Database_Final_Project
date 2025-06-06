@@ -35,3 +35,38 @@ CREATE TABLE yuyutei_series_links (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY unique_url (url)
 );
+
+-- 1. 拍賣商品主表
+CREATE TABLE auction_items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    name VARCHAR(64) NOT NULL,
+    description TEXT,
+    price DECIMAL(10,2) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- 2. 商品圖片表（一商品多圖片）
+CREATE TABLE auction_images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    item_id INT NOT NULL,
+    image_path VARCHAR(256) NOT NULL,
+    FOREIGN KEY (item_id) REFERENCES auction_items(id) ON DELETE CASCADE
+);
+
+-- 3. 標籤主表（例如「特價」「新品」「稀有」等）
+CREATE TABLE auction_tags (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(32) NOT NULL UNIQUE
+);
+
+-- 4. 商品對標籤多對多關聯表
+CREATE TABLE auction_item_tags (
+    item_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    PRIMARY KEY (item_id, tag_id),
+    FOREIGN KEY (item_id) REFERENCES auction_items(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES auction_tags(id) ON DELETE CASCADE
+);
+

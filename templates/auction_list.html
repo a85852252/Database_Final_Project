@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}賣場總覽{% endblock %}
+{% block content %}
+<div class="container">
+  <h2>賣場總覽</h2>
+  <!-- 標籤快速篩選 -->
+  <form method="get" style="margin-bottom: 1.5rem;">
+    <label><b>依標籤篩選：</b></label>
+    <select name="tag" onchange="this.form.submit()" style="margin-left:8px; padding:0.3rem;">
+      <option value="">-- 全部商品 --</option>
+      {% for tag in all_tags %}
+        <option value="{{ tag.id }}" {% if tag.id|string == cur_tag %}selected{% endif %}>{{ tag.name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem;">
+    {% for item in items %}
+      <div class="card-result" style="background:#eef9ff; border-radius:12px; box-shadow:0 2px 8px #0001; padding:1rem;">
+        <img src="{{ url_for('static', filename=item.image_path) if item.image_path else url_for('static', filename='img/no-image.png') }}"
+             alt="{{ item.name }}" style="max-width:100%; max-height:180px; border-radius:8px; object-fit:cover; margin-bottom:10px;">
+        <div class="card-info">
+          <div class="card-name" style="font-weight:bold;">{{ item.name }}</div>
+          <div class="card-price" style="color:#007b5e; font-weight:600;">NT${{ item.price }}</div>
+          <div class="card-tags" style="margin:0.5em 0;">
+            {% for tag in item.tags %}
+              <span style="display:inline-block; background:#d0f2ff; color:#0077a8; padding:2px 9px; border-radius:6px; margin-right:5px; font-size:0.95em;">{{ tag.name }}</span>
+            {% endfor %}
+          </div>
+          <div class="card-desc" style="font-size:0.96em; color:#555;">{{ item.description|default('（無說明）') }}</div>
+          <div class="card-meta" style="font-size:0.85em; color:#888; margin-top:5px;">上架者：{{ item.username }}<br>上架時間：{{ item.created_at.strftime('%Y-%m-%d %H:%M') }}</div>
+        </div>
+      </div>
+    {% else %}
+      <div style="grid-column:1/-1; color:#666; text-align:center; font-size:1.2em; margin:3em 0;">查無商品</div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

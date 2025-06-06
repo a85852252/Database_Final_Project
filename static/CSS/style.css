@@ -21,7 +21,7 @@ header {
   padding: 0.8rem 2rem;
   background: linear-gradient(135deg, var(--primary-color), var(--dark-blue));
   color: white;
-  position: relative; /* 方便下拉選單用 */
+  position: relative; 
 }
 header .logo h1 {
   margin: 0;
@@ -87,12 +87,12 @@ header nav .dropdown li a:hover {
 }
 
 header .user-area {
-  margin-left: 1.5rem;  /* nav 與 user-area 之間稍微留白 */
+  margin-left: 1.5rem; 
   display: flex;
   align-items: center;
 }
 
-/* 使用者圖示（共用） */
+
 header .user-area .user-icon {
   width: 28px;
   height: 28px;
@@ -101,7 +101,7 @@ header .user-area .user-icon {
   margin-right: 0.4rem;
 }
 
-/* ===== 未登入時 ===== */
+
 header .user-not-logged-in {
   display: flex;
   align-items: center;
@@ -119,7 +119,7 @@ header .user-not-logged-in .login-link:hover {
 }
 
 header .user-logged-in {
-  position: relative;  /* 讓下拉選單使用絕對定位時，參考此容器 */
+  position: relative;  
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -132,18 +132,18 @@ header .user-logged-in .username {
   white-space: nowrap;
 }
 
-/* 下拉選單：預設隱藏 */
+
 header .user-logged-in .user-dropdown {
   display: none;
   position: absolute;
-  top: 120%;          /* 距離 user-logged-in 底部一點 */
+  top: 120%;          
   right: 0;
   background: white;
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   overflow: hidden;
   z-index: 500;
-  min-width: 120px;   /* 最小寬度，可自行調整 */
+  min-width: 120px;   
 }
 
 header .user-logged-in .user-dropdown ul {
@@ -176,14 +176,13 @@ header .user-logged-in:hover .user-dropdown {
   display: block;
 }
 
-/* 可選：在小螢幕時，把 user-area 的位置做調整 */
 @media (max-width: 768px) {
   .user-area {
     top: 0.8rem;
     right: 1rem;
   }
   .user-logged-in .username {
-    display: none;  /* 如果螢幕太窄，只顯示圖示、不顯示文字 */
+    display: none;  
   }
 }
 
