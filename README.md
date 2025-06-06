@@ -29,7 +29,7 @@
 ### 2. 安裝套件
 
 ```bash
-pip install requests beautifulsoup4 mysql-connector-python flask pandas schedule
+pip install requests beautifulsoup4 mysql-connector-python flask pandas schedule Werkzeug
 ```
 
 ### 3. 執行方式
