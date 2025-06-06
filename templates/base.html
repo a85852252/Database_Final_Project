@@ -4,17 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}卡牌市場彙整系統{% endblock %}</title>
-  <!-- 請確認這條路徑正確，指向你的 CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <!-- ======== Header (導覽列 + 使用者登入/登出區) ======== -->
   <header>
     <div class="logo">
       <h1>卡牌市場彙整系統</h1>
     </div>
 
-    <!-- 讓 nav 靠右，可用 margin-left:auto 推動 -->
     <nav>
       <ul class="nav-menu">
         <li class="nav-item"><a href="{{ url_for('index') }}">首頁</a></li>
@@ -36,10 +33,8 @@
       </ul>
     </nav>
 
-    <!-- 使用者區塊 -->
     <div class="user-area">
       {% if session.username %}
-        <!-- 已登入：顯示圖示 + 使用者名稱 + 下拉登出選單 -->
         <div class="user-logged-in">
           <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="User Icon" class="user-icon">
           <span class="username">{{ session.username }}</span>
@@ -50,7 +45,6 @@
           </div>
         </div>
       {% else %}
-        <!-- 未登入：顯示圖示 + 登入連結 -->
         <div class="user-not-logged-in">
           <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="User Icon" class="user-icon">
           <a href="{{ url_for('login') }}" class="login-link">登入</a>
@@ -60,7 +54,6 @@
   </header>
 
   <main>
-    {# ========= Flash 訊息的遮罩層 ========= #}
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div id="flash-overlay">
@@ -73,15 +66,13 @@
       {% endif %}
     {% endwith %}
 
-    {# 各子頁面內容會被置入此區塊 #}
     {% block content %}{% endblock %}
   </main>
-
+  <div id="back-to-top" title="回到頂部" style="display: none; opacity: 0; position: fixed;">TOP</div>
   <footer>
     <p>&copy; 2025 資料庫期末專題</p>
   </footer>
 
-  <!-- 請確認這路徑正確指向你的 main.js -->
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 </html>
