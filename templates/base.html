@@ -27,8 +27,8 @@
         <li class="nav-item">
           <a href="#">拍賣場</a>
           <ul class="dropdown">
-            <li><a href="{{ url_for('auction.auction_list') }}">賣場總覽</a></li>
-            <li><a href="{{ url_for('auction.auction_upload') }}">上架商品</a></li>
+            <li><a href="{{ url_for('shop.auction_list') }}">賣場總覽</a></li>
+            <li><a href="{{ url_for('shop.auction_upload') }}">上架商品</a></li>
           </ul>
         </li>
         <li class="nav-item"><a href="#">聯絡我們</a></li>
@@ -42,8 +42,8 @@
           <span class="username">{{ session.username }}</span>
           <div class="user-dropdown">
             <ul>
-              <li><a href="{{ url_for('auction.user_items') }}">我的商品</a></li>
-              <li><a href="{{ url_for('logout') }}">登出</a></li>
+              <li><a href="{{ url_for('shop.user_items') }}">我的商品</a></li>
+              <li><a href="{{ url_for('auth.logout') }}">登出</a></li>
             </ul>
           </div>
         </div>

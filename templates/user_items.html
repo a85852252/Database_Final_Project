@@ -42,7 +42,7 @@
             <div class="card-meta" style="font-size:0.85em; color:#888; margin-top:5px;">
               上架時間：{{ item.created_at.strftime('%Y-%m-%d %H:%M') }}
             </div>
-            <a href="{{ url_for('auction.auction_edit', item_id=item.id) }}" class="btn btn-edit" style="margin-top:10px; width:100%;">編輯</a>
+            <a href="{{ url_for('shop.auction_edit', item_id=item.id) }}" class="btn btn-edit" style="margin-top:10px; width:100%;">編輯</a>
           </div>
         </div>
       {% endfor %}

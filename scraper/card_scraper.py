@@ -2,7 +2,7 @@
 
 import requests
 from bs4 import BeautifulSoup
-from database import connect_db, insert_card, clear_table
+from utils.database import connect_db, insert_card, clear_table
 
 def scrape_cards_from_url(url):
     headers = {'User-Agent': 'Mozilla/5.0'}

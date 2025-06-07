@@ -34,7 +34,7 @@ def scrape_yuyutei_series_links():
     return deduped
 
 def run_yuyutei_top_scraper():
-    from database import connect_db, clear_yuyutei_series_links, insert_yuyutei_series_link
+    from utils.database import connect_db, clear_yuyutei_series_links, insert_yuyutei_series_link
 
     print("開始爬取 YUYU-TEI 系列連結")
     conn = connect_db()

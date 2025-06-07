@@ -1,7 +1,7 @@
 # scraper/series_scraper.py
 import requests
 from bs4 import BeautifulSoup
-from database import connect_db, clear_series_table, insert_series
+from utils.database import connect_db, clear_series_table, insert_series
 
 def scrape_series():
     url = 'https://ws-tcg.com/cardlist/'
