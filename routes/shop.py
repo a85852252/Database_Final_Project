@@ -45,7 +45,7 @@ def auction_list():
         item['series'] = cursor.fetchall()
 
     conn.close()
-    return render_template('auction_list.html', items=items, all_series=all_series, cur_tag=tag_id)
+    return render_template('shop/auction_list.html', items=items, all_series=all_series, cur_tag=tag_id)
 
 @shop_bp.route('/auction/upload', methods=['GET', 'POST'])
 def auction_upload():
@@ -102,7 +102,7 @@ def auction_upload():
 
     conn.close()
     # 對應前端用 all_series
-    return render_template('auction_upload.html', all_series=all_series)
+    return render_template('shop/auction_upload.html', all_series=all_series)
 
 @shop_bp.route('/auction/my-items')
 def user_items():
@@ -136,7 +136,7 @@ def user_items():
         item['tags'] = cursor.fetchall()
 
     conn.close()
-    return render_template('user_items.html', items=items)
+    return render_template('shop/user_items.html', items=items)
 
 @shop_bp.route('/auction/edit/<int:item_id>', methods=['GET', 'POST'])
 def auction_edit(item_id):
@@ -175,7 +175,7 @@ def auction_edit(item_id):
         return redirect(url_for('shop.user_items'))
 
     conn.close()
-    return render_template('auction_edit.html', item=item)
+    return render_template('shop/auction_edit.html', item=item)
 
 @shop_bp.route('/api/create_tag', methods=['POST'])
 def create_tag():

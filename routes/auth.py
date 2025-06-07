@@ -34,9 +34,9 @@ def register():
                 flash('使用者名稱或 Email 已被註冊', 'danger')
             else:
                 flash('註冊失敗：' + result, 'danger')
-            return redirect(url_for('auth.register'))  .
+            return redirect(url_for('auth.register'))  
 
-    return render_template('register.html')
+    return render_template('auth/register.html')
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
@@ -62,7 +62,7 @@ def login():
             flash('帳號或密碼錯誤', 'danger')
             return redirect(url_for('auth.login'))  
 
-    return render_template('login.html')
+    return render_template('auth/login.html')
 
 @auth_bp.route('/logout')
 def logout():
