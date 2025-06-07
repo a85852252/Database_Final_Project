@@ -363,22 +363,24 @@ header .user-logged-in:hover .user-dropdown {
     margin: 2rem auto;
 }
 .card-result {
-    background: #eef9ff;
-    border-radius: 12px;
-    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    overflow: hidden;
-    text-align: center;
-    padding: 0.5rem;
-    transition: transform 0.3s cubic-bezier(0.36,0.6,0.3,1), box-shadow 0.2s; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;  /* 讓內容與按鈕自動分散上下 */
+  min-height: 380px; /* 依照你的實際高度調整 */
+  background: #eef9ff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #0001;
+  padding: 1rem;
 }
 .card-result:hover {
     transform: scale(1.03);
 }
 .card-result img {
-    width: 100%;
-    height: auto;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
+  width: 100%;
+  max-height: 160px;  /* 統一圖片高度 */
+  object-fit: cover;  /* 保證圖片不變形，裁切多餘 */
+  border-radius: 8px;
+  margin-bottom: 10px;
 }
 .card-result.zoomed {
   transform: scale(1.5);
@@ -386,10 +388,10 @@ header .user-logged-in:hover .user-dropdown {
   box-shadow: 0 8px 24px rgba(0,0,0,0.18);
 }
 .card-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-size: 0.9rem;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 .card-name {
     font-weight: bold;
@@ -408,6 +410,14 @@ header .user-logged-in:hover .user-dropdown {
     font-size: 0.85rem;
     color: #555;
 }
+
+.card-actions {
+  margin-top: 14px;
+}
+.card-actions .btn {
+  width: 100%;
+}
+
 img[loading="lazy"] {
     transition: opacity 0.3s ease-in;
     opacity: 0;
@@ -440,6 +450,44 @@ img[loading="lazy"]:not([src=""]) {
 #back-to-top:hover {
   background: var(--mid-blue);
   opacity: 0.9;
+}
+
+
+.btn-secondary {
+  background: #fff;
+  color: var(--primary-color);
+  border: 2px solid var(--primary-color);
+  font-weight: bold;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-secondary:hover {
+  background: #e0f6ff;
+  color: #007bbd;
+}
+
+/* 修正 Choices.js 在 select 多選顯示時的寬度 */
+.choices, .choices__inner {
+  width: 100% !important;
+  min-width: 200px;
+  box-sizing: border-box;
+  background: #fafbfc;
+  font-size: 1rem;
+}
+
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
+  width: 100% !important;
+  min-width: 200px;
+  box-sizing: border-box;
+  z-index: 20;
+}
+
+.choices__item--selectable {
+  white-space: normal !important; /* 讓很長的名稱自動換行 */
+}
+
+.choices__input {
+  min-width: 120px;
 }
 
 footer {

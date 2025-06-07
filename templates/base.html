@@ -6,6 +6,7 @@
   <title>{% block title %}卡牌市場彙整系統{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 </head>
 <body>
   <header>
@@ -77,12 +78,17 @@
 
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      if (window.jQuery && $('#tag-select').length) {
-        $('#tag-select').select2({
-          width: '100%',
-          placeholder: "請選擇標籤（可多選）"
+      const select = document.getElementById('series-select');
+      if (select) {
+        new Choices(select, {
+          removeItemButton: true,
+          searchEnabled: true,
+          placeholderValue: '選擇商品標籤…',
+          shouldSort: false
         });
       }
     });

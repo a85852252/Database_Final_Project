@@ -1,11 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // --- Flash 訊息自動淡出 ---
   const flashOverlay = document.getElementById('flash-overlay');
   const flashItems = document.querySelectorAll('#flash-box .flash');
   if (flashOverlay && flashItems.length > 0) {
     setTimeout(() => {
-      flashItems.forEach(item => {
-        item.classList.add('fade-out');
-      });
+      flashItems.forEach(item => item.classList.add('fade-out'));
       setTimeout(() => {
         if (flashOverlay.parentNode) {
           flashOverlay.parentNode.removeChild(flashOverlay);
@@ -14,21 +13,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1500);
   }
 
+  // --- 搜尋功能區（只處理搜尋頁/首頁的 select，不會動到上架頁 select） ---
   const btnName = document.getElementById('by-name');
   const btnSeries = document.getElementById('by-series');
   const input = document.getElementById('search-input');
-  const select = document.getElementById('series-select');
+  const searchSelect = document.getElementById('search-series-select'); // <<<<<< 只抓搜尋用的 select
   const results = document.getElementById('results');
   let mode = 'name';
   let debounceTimer = null;
 
-  if (btnName && btnSeries && input && select && results) {
+  if (btnName && btnSeries && input && searchSelect && results) {
     btnName.addEventListener('click', () => {
       mode = 'name';
       btnName.classList.add('active');
       btnSeries.classList.remove('active');
       input.style.display = 'block';
-      select.style.display = 'none';
+      searchSelect.style.display = 'none';
       input.value = '';
       results.innerHTML = '';
     });
@@ -38,20 +38,20 @@ document.addEventListener('DOMContentLoaded', () => {
       btnSeries.classList.add('active');
       btnName.classList.remove('active');
       input.style.display = 'none';
-      select.style.display = 'block';
-      select.selectedIndex = 0;
+      searchSelect.style.display = 'block';
+      searchSelect.selectedIndex = 0;
       results.innerHTML = '';
 
-      if (select.options.length === 1) {
+      if (searchSelect.options.length === 1) {
         fetch('/api/series_list')
           .then(res => res.json())
           .then(data => {
-            select.innerHTML = '<option value="" disabled selected>請選擇系列名稱 (代號)…</option>';
+            searchSelect.innerHTML = '<option value="" disabled selected>請選擇系列名稱 (代號)…</option>';
             data.forEach(series => {
               const option = document.createElement('option');
               option.value = series.code;
               option.textContent = `[${series.code}] ${series.name}`;
-              select.appendChild(option);
+              searchSelect.appendChild(option);
             });
           });
       }
@@ -69,8 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }, 300);
     });
 
-    select.addEventListener('change', () => {
-      const query = select.value;
+    searchSelect.addEventListener('change', () => {
+      const query = searchSelect.value;
       if (!query) {
         results.innerHTML = '';
         return;
@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // --- 回到頂部 ---
   const backToTop = document.getElementById('back-to-top');
   if (backToTop) {
     window.addEventListener('scroll', () => {
@@ -125,6 +126,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- 卡片 Hover 放大 ---
   function enableCardHoverZoom() {
     document.querySelectorAll('.card-result').forEach(card => {
       let zoomTimer = null;
@@ -140,6 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // --- 商品多圖預覽＋可單張刪除 ---
   const imageInput = document.getElementById('image-input');
   const imagePreview = document.getElementById('image-preview');
   let selectedFiles = [];
@@ -206,35 +209,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  const addTagBtn = document.getElementById('add-tag-btn');
-  const tagSelect = document.getElementById('tag-select');
-
-  if (addTagBtn && tagSelect) {
-    addTagBtn.addEventListener('click', async () => {
-      const tagName = prompt('請輸入新標籤名稱：');
-      if (!tagName || tagName.trim() === '') return;
-
-      try {
-        const res = await fetch('/api/create_tag', {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ name: tagName.trim() })
-        });
-        const data = await res.json();
-        if (data.success) {
-          const option = document.createElement('option');
-          option.value = data.id;
-          option.textContent = data.name;
-          option.selected = true; 
-          tagSelect.appendChild(option);
-          alert('標籤新增成功！');
-        } else {
-          alert('新增失敗：' + (data.error || '未知錯誤'));
-        }
-      } catch (err) {
-        alert('無法新增標籤（伺服器異常）');
-      }
+  // --- 上架商品頁的商品標籤多選（只有上架頁才有）---
+  const seriesSelect = document.getElementById('series-select');
+  if (seriesSelect) {
+    seriesSelect.choicesInstance = new Choices(seriesSelect, {
+      removeItemButton: true,
+      searchEnabled: true,
+      placeholder: true,
+      placeholderValue: '選擇商品標籤...',
+      shouldSort: false
     });
   }
+
 });
- 

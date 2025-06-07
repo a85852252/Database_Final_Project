@@ -24,7 +24,7 @@ def auction_list():
               FROM auction_items i
               JOIN users u ON i.user_id = u.id
               JOIN auction_item_series ais ON i.id = ais.item_id
-             WHERE ais.series_code = %s
+             WHERE ais.series_code = %s AND i.stock > 0
              ORDER BY i.created_at DESC
         """, (tag_id,))
     else:
@@ -33,6 +33,7 @@ def auction_list():
                    (SELECT image_path FROM auction_images WHERE item_id = i.id LIMIT 1) AS image_path
               FROM auction_items i
               JOIN users u ON i.user_id = u.id
+             WHERE i.stock > 0
              ORDER BY i.created_at DESC
         """)
     items = cursor.fetchall()
@@ -48,6 +49,7 @@ def auction_list():
     conn.close()
     return render_template('auction_list.html', items=items, all_series=all_series, cur_tag=tag_id)
 
+
 @auction_bp.route('/auction/upload', methods=['GET', 'POST'])
 def auction_upload():
     if 'user_id' not in session:
@@ -56,22 +58,25 @@ def auction_upload():
 
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
+    # 用 series 做商品標籤（多選）
     cursor.execute("SELECT code, name FROM series ORDER BY name")
-    all_tags = cursor.fetchall()
+    all_series = cursor.fetchall()
 
     if request.method == 'POST':
         name = request.form.get('name', '').strip()
         description = request.form.get('description', '').strip()
         price = request.form.get('price', '').strip()
-        tags = request.form.getlist('tags')
+        series_codes = request.form.getlist('series_codes')  # <--- 取多選
         images = request.files.getlist('images')
 
         if not name or not price or not images or images[0].filename == '':
             flash('請填寫商品名稱、價格，並至少上傳一張圖片', 'danger')
             return redirect(url_for('auction.auction_upload'))
 
-        cursor.execute("INSERT INTO auction_items (user_id, name, description, price) VALUES (%s, %s, %s, %s)",
-                       (session['user_id'], name, description, price))
+        cursor.execute(
+            "INSERT INTO auction_items (user_id, name, description, price) VALUES (%s, %s, %s, %s)",
+            (session['user_id'], name, description, price)
+        )
         item_id = cursor.lastrowid
 
         upload_folder = os.path.join(current_app.static_folder, 'uploads')
@@ -81,9 +86,12 @@ def auction_upload():
                 filename = secure_filename(img.filename)
                 save_path = os.path.join(upload_folder, filename)
                 img.save(save_path)
-                cursor.execute("INSERT INTO auction_images (item_id, image_path) VALUES (%s, %s)", (item_id, f'uploads/{filename}'))
+                cursor.execute(
+                    "INSERT INTO auction_images (item_id, image_path) VALUES (%s, %s)",
+                    (item_id, f'uploads/{filename}')
+                )
 
-        series_codes = request.form.getlist('tags') 
+        # 寫入商品-系列關聯（多選）
         for code in series_codes:
             cursor.execute(
                 "INSERT INTO auction_item_series (item_id, series_code) VALUES (%s, %s)", 
@@ -96,7 +104,9 @@ def auction_upload():
         return redirect(url_for('auction.auction_upload'))
 
     conn.close()
-    return render_template('auction_upload.html', all_tags=all_tags)
+    # 對應前端用 all_series
+    return render_template('auction_upload.html', all_series=all_series)
+
 
 @auction_bp.route('/auction/my-items')
 def user_items():
@@ -131,6 +141,46 @@ def user_items():
 
     conn.close()
     return render_template('user_items.html', items=items)
+
+@auction_bp.route('/auction/edit/<int:item_id>', methods=['GET', 'POST'])
+def auction_edit(item_id):
+    if 'user_id' not in session:
+        flash('請先登入', 'warning')
+        return redirect(url_for('login'))
+
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM auction_items WHERE id=%s AND user_id=%s", (item_id, session['user_id']))
+    item = cursor.fetchone()
+    if not item:
+        conn.close()
+        flash('找不到商品或沒有權限', 'danger')
+        return redirect(url_for('auction.user_items')) 
+
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        description = request.form.get('description', '').strip()
+        price = request.form.get('price', '').strip()
+        stock = request.form.get('stock', '').strip()
+
+        if not name or not price or not stock:
+            flash('名稱、價格、庫存不可空白', 'danger')
+            return redirect(request.url)
+
+        cursor.execute("""
+            UPDATE auction_items
+            SET name=%s, description=%s, price=%s, stock=%s
+            WHERE id=%s AND user_id=%s
+        """, (name, description, price, stock, item_id, session['user_id']))
+        conn.commit()
+        conn.close()
+        flash('商品資訊已更新', 'success')
+        return redirect(url_for('auction.user_items'))
+
+    conn.close()
+    return render_template('auction_edit.html', item=item)
+
 
 @app.route('/api/create_tag', methods=['POST'])
 def create_tag():

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}編輯商品{% endblock %}
+{% block content %}
+<div class="container" style="max-width:480px;">
+  <h2>編輯商品</h2>
+  <form method="post">
+    <div class="form-group">
+      <label>商品名稱</label>
+      <input type="text" name="name" class="form-control" value="{{ item.name }}" required>
+    </div>
+    <div class="form-group">
+      <label>價格（NT$）</label>
+      <input type="number" name="price" class="form-control" value="{{ item.price|int }}" min="0" required>
+    </div>
+    <div class="form-group">
+      <label>庫存</label>
+      <input type="number" name="stock" class="form-control" value="{{ item.stock|int }}" min="0" required>
+    </div>
+    <div class="form-group">
+      <label>商品說明</label>
+      <textarea name="description" class="form-control">{{ item.description }}</textarea>
+    </div>
+    <div style="display: flex; gap: 1.2rem;">
+        <button type="submit" class="btn btn-primary" style="flex: 1 1 0;">儲存變更</button>
+        <a href="{{ url_for('auction.user_items') }}" class="btn btn-secondary" style="flex: 1 1 0; text-align: center;">取消</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
