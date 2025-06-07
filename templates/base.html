@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}卡牌市場彙整系統{% endblock %}</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
   <header>
@@ -40,6 +41,7 @@
           <span class="username">{{ session.username }}</span>
           <div class="user-dropdown">
             <ul>
+              <li><a href="{{ url_for('auction.user_items') }}">我的商品</a></li>
               <li><a href="{{ url_for('logout') }}">登出</a></li>
             </ul>
           </div>
@@ -74,5 +76,16 @@
   </footer>
 
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (window.jQuery && $('#tag-select').length) {
+        $('#tag-select').select2({
+          width: '100%',
+          placeholder: "請選擇標籤（可多選）"
+        });
+      }
+    });
+  </script>
 </body>
 </html>

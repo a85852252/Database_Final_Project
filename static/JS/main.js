@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // === Flash 訊息自動消失 ===
   const flashOverlay = document.getElementById('flash-overlay');
   const flashItems = document.querySelectorAll('#flash-box .flash');
   if (flashOverlay && flashItems.length > 0) {
@@ -15,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 1500);
   }
 
-  // === 搜尋功能（只在有搜尋元件時啟用） ===
   const btnName = document.getElementById('by-name');
   const btnSeries = document.getElementById('by-series');
   const input = document.getElementById('search-input');
@@ -107,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // === 回到頂部 ===
   const backToTop = document.getElementById('back-to-top');
   if (backToTop) {
     window.addEventListener('scroll', () => {
@@ -128,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // === 卡片 hover 放大 ===
   function enableCardHoverZoom() {
     document.querySelectorAll('.card-result').forEach(card => {
       let zoomTimer = null;
@@ -144,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // === 商品多圖預覽＋可單張刪除（只在有上傳欄位時啟用） ===
   const imageInput = document.getElementById('image-input');
   const imagePreview = document.getElementById('image-preview');
   let selectedFiles = [];
@@ -174,7 +169,6 @@ document.addEventListener('DOMContentLoaded', () => {
           img.style.objectFit = 'cover';
           img.style.display = 'block';
 
-          // 刪除按鈕
           const btn = document.createElement('button');
           btn.innerHTML = '✖';
           btn.type = 'button';
@@ -210,6 +204,37 @@ document.addEventListener('DOMContentLoaded', () => {
       selectedFiles.forEach(file => dt.items.add(file));
       imageInput.files = dt.files;
     }
+  }
+
+  const addTagBtn = document.getElementById('add-tag-btn');
+  const tagSelect = document.getElementById('tag-select');
+
+  if (addTagBtn && tagSelect) {
+    addTagBtn.addEventListener('click', async () => {
+      const tagName = prompt('請輸入新標籤名稱：');
+      if (!tagName || tagName.trim() === '') return;
+
+      try {
+        const res = await fetch('/api/create_tag', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ name: tagName.trim() })
+        });
+        const data = await res.json();
+        if (data.success) {
+          const option = document.createElement('option');
+          option.value = data.id;
+          option.textContent = data.name;
+          option.selected = true; 
+          tagSelect.appendChild(option);
+          alert('標籤新增成功！');
+        } else {
+          alert('新增失敗：' + (data.error || '未知錯誤'));
+        }
+      } catch (err) {
+        alert('無法新增標籤（伺服器異常）');
+      }
+    });
   }
 });
  

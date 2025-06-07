@@ -3,13 +3,12 @@
 {% block content %}
 <div class="container">
   <h2>賣場總覽</h2>
-  <!-- 標籤快速篩選 -->
   <form method="get" style="margin-bottom: 1.5rem;">
-    <label><b>依標籤篩選：</b></label>
+    <label><b>依系列篩選：</b></label>
     <select name="tag" onchange="this.form.submit()" style="margin-left:8px; padding:0.3rem;">
       <option value="">-- 全部商品 --</option>
-      {% for tag in all_tags %}
-        <option value="{{ tag.id }}" {% if tag.id|string == cur_tag %}selected{% endif %}>{{ tag.name }}</option>
+      {% for s in all_series %}
+        <option value="{{ s.code }}" {% if cur_tag == s.code %}selected{% endif %}>{{ s.name }}</option>
       {% endfor %}
     </select>
   </form>

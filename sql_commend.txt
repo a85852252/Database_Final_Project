@@ -36,7 +36,7 @@ CREATE TABLE yuyutei_series_links (
     UNIQUE KEY unique_url (url)
 );
 
--- 1. 拍賣商品主表
+#建立 拍賣商品主表
 CREATE TABLE auction_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE auction_items (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- 2. 商品圖片表（一商品多圖片）
+#建立 商品圖片表
 CREATE TABLE auction_images (
     id INT AUTO_INCREMENT PRIMARY KEY,
     item_id INT NOT NULL,
@@ -55,13 +55,13 @@ CREATE TABLE auction_images (
     FOREIGN KEY (item_id) REFERENCES auction_items(id) ON DELETE CASCADE
 );
 
--- 3. 標籤主表（例如「特價」「新品」「稀有」等）
+#建立 標籤主表
 CREATE TABLE auction_tags (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(32) NOT NULL UNIQUE
 );
 
--- 4. 商品對標籤多對多關聯表
+#建立 商品對標籤多對多關聯表
 CREATE TABLE auction_item_tags (
     item_id INT NOT NULL,
     tag_id INT NOT NULL,
@@ -70,3 +70,11 @@ CREATE TABLE auction_item_tags (
     FOREIGN KEY (tag_id) REFERENCES auction_tags(id) ON DELETE CASCADE
 );
 
+#
+CREATE TABLE auction_item_series (
+    item_id INT NOT NULL,
+    series_code VARCHAR(20) NOT NULL,
+    PRIMARY KEY (item_id, series_code),
+    FOREIGN KEY (item_id) REFERENCES auction_items(id),
+    FOREIGN KEY (series_code) REFERENCES series(code)
+);

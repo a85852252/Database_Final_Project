@@ -14,19 +14,17 @@ def auction_list():
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
 
-    # 查詢所有標籤（for 篩選用）
-    cursor.execute("SELECT * FROM auction_tags ORDER BY name")
-    all_tags = cursor.fetchall()
+    cursor.execute("SELECT code, name FROM series ORDER BY name")
+    all_series = cursor.fetchall()
 
-    # 查詢商品（如有篩選就只撈該標籤）
     if tag_id:
         cursor.execute("""
             SELECT i.*, u.username,
                    (SELECT image_path FROM auction_images WHERE item_id = i.id LIMIT 1) AS image_path
               FROM auction_items i
               JOIN users u ON i.user_id = u.id
-              JOIN auction_item_tags ait ON i.id = ait.item_id
-             WHERE ait.tag_id = %s
+              JOIN auction_item_series ais ON i.id = ais.item_id
+             WHERE ais.series_code = %s
              ORDER BY i.created_at DESC
         """, (tag_id,))
     else:
@@ -39,58 +37,16 @@ def auction_list():
         """)
     items = cursor.fetchall()
 
-    # 對每個商品查標籤
     for item in items:
         cursor.execute("""
-            SELECT t.* FROM auction_tags t
-            JOIN auction_item_tags ait ON t.id = ait.tag_id
-           WHERE ait.item_id = %s
+            SELECT s.code, s.name FROM series s
+            JOIN auction_item_series ais ON s.code = ais.series_code
+           WHERE ais.item_id = %s
         """, (item['id'],))
-        item['tags'] = cursor.fetchall()
+        item['series'] = cursor.fetchall()
 
     conn.close()
-    return render_template('auction_list.html', items=items, all_tags=all_tags, cur_tag=tag_id)
-
-    tag_id = request.args.get('tag')
-    conn = connect_db()
-    cursor = conn.cursor(dictionary=True)
-    
-    # 查詢所有標籤（for 篩選用）
-    cursor.execute("SELECT * FROM auction_tags ORDER BY name")
-    all_tags = cursor.fetchall()
-    
-    # 查詢商品（如有篩選就只撈該標籤）
-    if tag_id:
-        cursor.execute("""
-            SELECT i.*, u.username,
-                   (SELECT image_path FROM auction_images WHERE item_id = i.id LIMIT 1) AS image_path
-              FROM auction_items i
-              JOIN users u ON i.user_id = u.id
-              JOIN auction_item_tags ait ON i.id = ait.item_id
-             WHERE ait.tag_id = %s
-             ORDER BY i.created_at DESC
-        """, (tag_id,))
-    else:
-        cursor.execute("""
-            SELECT i.*, u.username,
-                   (SELECT image_path FROM auction_images WHERE item_id = i.id LIMIT 1) AS image_path
-              FROM auction_items i
-              JOIN users u ON i.user_id = u.id
-             ORDER BY i.created_at DESC
-        """)
-    items = cursor.fetchall()
-    
-    # 對每個商品查標籤（優化可再合併查詢，這邊先 for 迴圈寫法）
-    for item in items:
-        cursor.execute("""
-            SELECT t.* FROM auction_tags t
-            JOIN auction_item_tags ait ON t.id = ait.tag_id
-           WHERE ait.item_id = %s
-        """, (item['id'],))
-        item['tags'] = cursor.fetchall()
-    
-    conn.close()
-    return render_template('auction_list.html', items=items, all_tags=all_tags, cur_tag=tag_id)
+    return render_template('auction_list.html', items=items, all_series=all_series, cur_tag=tag_id)
 
 @auction_bp.route('/auction/upload', methods=['GET', 'POST'])
 def auction_upload():
@@ -100,7 +56,7 @@ def auction_upload():
 
     conn = connect_db()
     cursor = conn.cursor(dictionary=True)
-    cursor.execute("SELECT * FROM auction_tags ORDER BY name")
+    cursor.execute("SELECT code, name FROM series ORDER BY name")
     all_tags = cursor.fetchall()
 
     if request.method == 'POST':
@@ -127,8 +83,12 @@ def auction_upload():
                 img.save(save_path)
                 cursor.execute("INSERT INTO auction_images (item_id, image_path) VALUES (%s, %s)", (item_id, f'uploads/{filename}'))
 
-        for tag_id in tags:
-            cursor.execute("INSERT INTO auction_item_tags (item_id, tag_id) VALUES (%s, %s)", (item_id, tag_id))
+        series_codes = request.form.getlist('tags') 
+        for code in series_codes:
+            cursor.execute(
+                "INSERT INTO auction_item_series (item_id, series_code) VALUES (%s, %s)", 
+                (item_id, code)
+            )
 
         conn.commit()
         conn.close()
@@ -137,6 +97,60 @@ def auction_upload():
 
     conn.close()
     return render_template('auction_upload.html', all_tags=all_tags)
+
+@auction_bp.route('/auction/my-items')
+def user_items():
+    if 'user_id' not in session:
+        flash('請先登入', 'warning')
+        return redirect(url_for('login'))
+    
+    user_id = session['user_id']
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT i.*, 
+               (SELECT image_path FROM auction_images WHERE item_id = i.id LIMIT 1) AS image_path,
+               CASE 
+                   WHEN i.is_sold = 1 THEN '已售出'
+                   ELSE '待售'
+               END AS status_label
+          FROM auction_items i
+         WHERE i.user_id = %s
+         ORDER BY i.created_at DESC
+    """, (user_id,))
+    items = cursor.fetchall()
+
+    for item in items:
+        cursor.execute("""
+            SELECT t.* FROM auction_tags t
+            JOIN auction_item_tags ait ON t.id = ait.tag_id
+           WHERE ait.item_id = %s
+        """, (item['id'],))
+        item['tags'] = cursor.fetchall()
+
+    conn.close()
+    return render_template('user_items.html', items=items)
+
+@app.route('/api/create_tag', methods=['POST'])
+def create_tag():
+    tag_name = request.json.get('name', '').strip()
+    if not tag_name:
+        return jsonify({'success': False, 'error': '標籤名稱不可空白'}), 400
+
+    conn = connect_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM auction_tags WHERE name = %s", (tag_name,))
+    if cursor.fetchone():
+        conn.close()
+        return jsonify({'success': False, 'error': '標籤已存在'}), 409
+
+    cursor.execute("INSERT INTO auction_tags (name) VALUES (%s)", (tag_name,))
+    conn.commit()
+    tag_id = cursor.lastrowid
+    conn.close()
+    return jsonify({'success': True, 'id': tag_id, 'name': tag_name})
 
 @app.route('/')
 def index():
