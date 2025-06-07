@@ -1,0 +1,22 @@
+.choices, .choices__inner {
+  width: 100% !important;
+  min-width: 200px;
+  box-sizing: border-box;
+  background: #fafbfc;
+  font-size: 1rem;
+}
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
+  width: 100% !important;
+  min-width: 200px;
+  box-sizing: border-box;
+  z-index: 20;
+}
+
+.choices__item--selectable {
+  white-space: normal !important; 
+}
+
+.choices__input {
+  min-width: 120px;
+}

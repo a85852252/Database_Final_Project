@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // --- Flash 訊息自動淡出 ---
   const flashOverlay = document.getElementById('flash-overlay');
   const flashItems = document.querySelectorAll('#flash-box .flash');
   if (flashOverlay && flashItems.length > 0) {
@@ -10,14 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
           flashOverlay.parentNode.removeChild(flashOverlay);
         }
       }, 500);
-    }, 1500);
+    }, 800);
   }
 
-  // --- 搜尋功能區（只處理搜尋頁/首頁的 select，不會動到上架頁 select） ---
   const btnName = document.getElementById('by-name');
   const btnSeries = document.getElementById('by-series');
   const input = document.getElementById('search-input');
-  const searchSelect = document.getElementById('search-series-select'); // <<<<<< 只抓搜尋用的 select
+  const searchSelect = document.getElementById('search-series-select');
   const results = document.getElementById('results');
   let mode = 'name';
   let debounceTimer = null;
@@ -105,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- 回到頂部 ---
   const backToTop = document.getElementById('back-to-top');
   if (backToTop) {
     window.addEventListener('scroll', () => {
@@ -126,7 +123,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 卡片 Hover 放大 ---
   function enableCardHoverZoom() {
     document.querySelectorAll('.card-result').forEach(card => {
       let zoomTimer = null;
@@ -142,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- 商品多圖預覽＋可單張刪除 ---
   const imageInput = document.getElementById('image-input');
   const imagePreview = document.getElementById('image-preview');
   let selectedFiles = [];
@@ -209,7 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // --- 上架商品頁的商品標籤多選（只有上架頁才有）---
   const seriesSelect = document.getElementById('series-select');
   if (seriesSelect) {
     seriesSelect.choicesInstance = new Choices(seriesSelect, {

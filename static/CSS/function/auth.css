@@ -1,0 +1,39 @@
+.form-container {
+  background: white;
+  padding: 2rem;
+  max-width: 400px;
+  margin: 2rem auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 0.3rem;
+  font-weight: 600;
+}
+.form-group input {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#flash-messages {
+  list-style: none;
+  margin: 1rem auto;
+  padding: 0;
+  max-width: 600px;
+}
+
+#flash-box .flash {
+  margin: 0.5rem 0;
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+
+

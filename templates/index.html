@@ -2,6 +2,10 @@
 
 {% block title %}首頁 - 卡牌市場彙整系統{% endblock %}
 
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/function/shop.css') }}">
+{% endblock %}
+
 {% block content %}
 <div class="container">
   <div class="search-box">

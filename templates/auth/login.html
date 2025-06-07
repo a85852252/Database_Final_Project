@@ -1,6 +1,7 @@
 {% extends "base.html" %}
-{% block title %}使用者登入{% endblock %}
-
+{% block extra_css %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/function/auth.css') }}">
+{% endblock %}
 {% block content %}
 <div class="form-container">
   <h2>使用者登入</h2>
