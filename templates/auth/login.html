@@ -1,7 +1,10 @@
 {% extends "base.html" %}
+
 {% block extra_css %}
+  <!-- 只在登入頁載入 auth 專用樣式 -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/function/auth.css') }}">
 {% endblock %}
+
 {% block content %}
 <div class="form-container">
   <h2>使用者登入</h2>

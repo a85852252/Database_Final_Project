@@ -3,21 +3,26 @@
 {% block title %}首頁 - 卡牌市場彙整系統{% endblock %}
 
 {% block extra_css %}
+  <!-- 只在首頁載入 shop 功能相關 CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/function/shop.css') }}">
 {% endblock %}
 
 {% block content %}
 <div class="container">
+  <!-- ====== 搜尋區（支援卡片名稱與系列搜尋切換） ====== -->
   <div class="search-box">
     <div class="search-tabs">
       <button id="by-name" class="active">依卡片名稱搜尋</button>
       <button id="by-series">依系列搜尋</button>
     </div>
     <input type="text" id="search-input" class="search-input" placeholder="請輸入關鍵字…" autocomplete="off"/>
+    <!-- 系列搜尋下拉（預設隱藏，切換才顯示） -->
     <select id="search-series-select" class="search-input" style="display: none;">
       <option value="">請選擇系列名稱…</option>
     </select>
   </div>
 </div>
+
+<!-- ====== 搜尋結果區（由 JS 動態填充） ====== -->
 <div class="results-container" id="results"></div>
 {% endblock %}

@@ -1,10 +1,15 @@
 {% extends "base.html" %}
+
 {% block extra_css %}
+  <!-- 只在賣場頁載入 shop 專用樣式 -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/function/shop.css') }}">
 {% endblock %}
+
 {% block content %}
 <div class="container">
   <h2>賣場總覽</h2>
+
+  <!-- ====== 系列篩選表單 ====== -->
   <form method="get" style="margin-bottom: 1.5rem;">
     <label><b>依系列篩選：</b></label>
     <select name="tag" onchange="this.form.submit()" style="margin-left:8px; padding:0.3rem;">
@@ -15,9 +20,10 @@
     </select>
   </form>
 
+  <!-- ====== 商品卡片區塊（排版為每行3個，可自行調整） ====== -->
   <div style="
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 每行4項 */
+    grid-template-columns: repeat(3, 1fr); /* 可依需求改成 4，每行 4 項 */
     gap: 1.5rem;
     align-items: stretch;
     justify-items: center;

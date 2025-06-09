@@ -22,18 +22,9 @@
   border-radius: 4px;
 }
 
-#flash-messages {
-  list-style: none;
-  margin: 1rem auto;
-  padding: 0;
-  max-width: 600px;
-}
-
+/* flash 訊息仍可強化 auth 頁面的在地樣式（如果和 base 不一樣時） */
 #flash-box .flash {
   margin: 0.5rem 0;
   opacity: 1;
   transition: opacity 0.5s ease-in-out;
 }
-
-
-

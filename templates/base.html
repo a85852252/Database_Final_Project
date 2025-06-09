@@ -4,19 +4,23 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>{% block title %}卡牌市場彙整系統{% endblock %}</title>
+
+  <!-- ====== 共用 CSS（依專案結構管理） ====== -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/general/base.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/general/header.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/general/footer.css') }}">
   {% block extra_css %}{% endblock %}
+
+  <!-- ====== 外部元件（下拉選單套件） ====== -->
   <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
 </head>
 <body>
+  <!-- ====== 頁首／導覽列區 ====== -->
   <header>
     <div class="logo">
       <h1>卡牌市場彙整系統</h1>
     </div>
-
     <nav>
       <ul class="nav-menu">
         <li class="nav-item"><a href="{{ url_for('index') }}">首頁</a></li>
@@ -37,9 +41,9 @@
         <li class="nav-item"><a href="#">聯絡我們</a></li>
       </ul>
     </nav>
-
     <div class="user-area">
       {% if session.username %}
+        <!-- 已登入狀態 -->
         <div class="user-logged-in">
           <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="User Icon" class="user-icon">
           <span class="username">{{ session.username }}</span>
@@ -51,6 +55,7 @@
           </div>
         </div>
       {% else %}
+        <!-- 未登入狀態 -->
         <div class="user-not-logged-in">
           <img src="{{ url_for('static', filename='img/user-icon.png') }}" alt="User Icon" class="user-icon">
           <a href="{{ url_for('auth.login') }}" class="login-link">登入</a>
@@ -59,18 +64,16 @@
     </div>
   </header>
 
+  <!-- ====== 主內容區 ====== -->
   <main>
+    <!-- ====== Flash 訊息（flask flash 用） ====== -->
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
         <div id="flash-overlay">
           <div id="flash-box">
-            {% with messages = get_flashed_messages(with_categories=true) %}
-              {% if messages %}
-                {% for category, message in messages %}
-                  <div class="flash {{ category }}">{{ message }}</div>
-                {% endfor %}
-              {% endif %}
-            {% endwith %}
+            {% for category, message in messages %}
+              <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
           </div>
         </div>
       {% endif %}
@@ -78,16 +81,21 @@
 
     {% block content %}{% endblock %}
   </main>
+
+  <!-- ====== 回到頂部按鈕 ====== -->
   <div id="back-to-top" title="回到頂部" style="display: none; opacity: 0; position: fixed;">TOP</div>
+
+  <!-- ====== 頁腳 ====== -->
   <footer>
     <p>&copy; 2025 資料庫期末專題</p>
   </footer>
 
+  <!-- ====== 主 JS、外部 JS（依專案結構呼叫） ====== -->
   <script type="module" src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
   <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
   <script>
+    // Choices.js 初始化（若有下拉選單 id 為 series-select 才啟動）
     document.addEventListener('DOMContentLoaded', function() {
       const select = document.getElementById('series-select');
       if (select) {

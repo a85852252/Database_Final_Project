@@ -1,7 +1,8 @@
-{% extends "base.html" %} 
+{% extends "base.html" %}
 {% block title %}上架商品{% endblock %}
 
 {% block extra_css %}
+  <!-- 只在上架頁載入 shop 專用樣式 -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/function/shop.css') }}">
 {% endblock %}
 
@@ -9,32 +10,41 @@
 <div class="container">
   <h2>上架商品</h2>
   <form method="post" enctype="multipart/form-data">
+    <!-- ===== 商品名稱 ===== -->
     <div class="form-group">
       <label>商品名稱</label>
       <input type="text" name="name" class="form-control" maxlength="64" required>
     </div>
+    <!-- ===== 商品說明 ===== -->
     <div class="form-group">
       <label>商品說明</label>
       <textarea name="description" class="form-control" rows="4"></textarea>
     </div>
+    <!-- ===== 價格 ===== -->
     <div class="form-group">
       <label>價格（元）</label>
       <input type="number" name="price" class="form-control" step="1" min="0" required>
     </div>
+    <!-- ===== 圖片上傳（多檔） ===== -->
     <div class="form-group">
       <label>商品圖片（可複數選擇）</label>
       <input type="file" name="images" class="form-control" accept="image/*" multiple required>
       <div id="image-preview" style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;"></div>
     </div>
+    <!-- ===== 商品標籤（多選系列） ===== -->
     <div class="form-group">
-      <label for="series-select">商品標籤 <span style="font-size:0.92em;color:#888;">（可複選，按住 Ctrl/Shift 或直接點選）</span></label>
+      <label for="series-select">商品標籤
+        <span style="font-size:0.92em;color:#888;">
+          （可複選，按住 Ctrl/Shift 或直接點選）
+        </span>
+      </label>
       <select name="series_codes" id="series-select" multiple required style="width:150%;min-width:200px;">
         {% for s in all_series %}
           <option value="{{ s.code }}">{{ s.name }}</option>
         {% endfor %}
       </select>
     </div>
-
+    
     <button type="submit" class="btn">上架商品</button>
   </form>
 </div>

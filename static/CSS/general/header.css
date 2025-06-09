@@ -4,7 +4,7 @@ header {
   padding: 0.8rem 2rem;
   background: linear-gradient(135deg, var(--primary-color), var(--dark-blue));
   color: white;
-  position: relative; 
+  position: relative;
 }
 
 header .logo h1 {
@@ -35,7 +35,6 @@ header nav .nav-item > a {
 header nav .nav-item > a:hover {
   background: var(--mid-blue);
 }
-
 header nav .dropdown {
   display: none;
   position: absolute;
@@ -46,36 +45,30 @@ header nav .dropdown {
   left: 0;
   padding: 0.5rem;
 }
-
 header nav .nav-item:hover .dropdown {
   display: block;
 }
-
 header nav .dropdown li {
   margin-bottom: 0.5rem;
 }
-
 header nav .dropdown li:last-child {
   margin-bottom: 0;
 }
-
 header nav .dropdown li a {
   display: block;
   padding: 0.5rem 1rem;
   color: #004d66;
   text-decoration: none;
 }
-
 header nav .dropdown li a:hover {
   background: rgba(0, 0, 0, 0.1);
 }
 
 header .user-area {
-  margin-left: 1.5rem; 
+  margin-left: 1.5rem;
   display: flex;
   align-items: center;
 }
-
 
 header .user-area .user-icon {
   width: 28px;
@@ -89,14 +82,12 @@ header .user-not-logged-in {
   display: flex;
   align-items: center;
 }
-
 header .user-not-logged-in .login-link {
   color: white;
   text-decoration: none;
   font-weight: 600;
   transition: color 0.2s;
 }
-
 header .user-not-logged-in .login-link:hover {
   color: #dff;
 }
@@ -107,43 +98,35 @@ header .user-logged-in {
   align-items: center;
   cursor: pointer;
 }
-
 header .user-logged-in .username {
   color: white;
   font-weight: 600;
   margin-right: 0.4rem;
   white-space: nowrap;
 }
-
-
 header .user-logged-in .user-dropdown {
   display: none;
   position: absolute;
-  top: 100%;      
-  right: 0;       
+  top: 100%;
+  right: 0;
   background: white;
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   overflow: hidden;
   z-index: 500;
-  min-width: 140px;   
+  min-width: 140px;
 }
-
-
 header .user-logged-in .user-dropdown ul {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-
 header .user-logged-in .user-dropdown ul li {
   border-bottom: 1px solid #eee;
 }
-
 header .user-logged-in .user-dropdown ul li:last-child {
   border-bottom: none;
 }
-
 header .user-logged-in .user-dropdown ul li a {
   display: block;
   padding: 0.6rem 1rem;
@@ -151,11 +134,9 @@ header .user-logged-in .user-dropdown ul li a {
   text-decoration: none;
   transition: background 0.2s;
 }
-
 header .user-logged-in .user-dropdown ul li a:hover {
   background: #f5f5f5;
 }
-
 header .user-logged-in:hover .user-dropdown {
   display: block;
 }
@@ -166,6 +147,6 @@ header .user-logged-in:hover .user-dropdown {
     right: 1rem;
   }
   .user-logged-in .username {
-    display: none;  
+    display: none;
   }
 }

@@ -1,11 +1,24 @@
-#刪除所有資料表
-
+-- 先刪除舊有資料表，確保清乾淨（注意順序，先刪關聯表再刪主表）
+DROP TABLE IF EXISTS auction_item_series;
+DROP TABLE IF EXISTS auction_item_tags;
+DROP TABLE IF EXISTS auction_images;
+DROP TABLE IF EXISTS auction_items;
+DROP TABLE IF EXISTS auction_tags;
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS cards;
 DROP TABLE IF EXISTS series;
 DROP TABLE IF EXISTS yuyutei_series_links;
 
-#建立 cards 資料表
+-- 1. 使用者主表（支援註冊/登入）
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    password_hash VARCHAR(256) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
+-- 2. 卡片資料表（爬蟲用）
 CREATE TABLE cards (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -16,8 +29,7 @@ CREATE TABLE cards (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-#建立 series 資料表
-
+-- 3. 系列資料表（官網爬蟲用，供卡片分類和賣場上架選擇）
 CREATE TABLE series (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -26,8 +38,7 @@ CREATE TABLE series (
     UNIQUE KEY unique_code (code)
 );
 
-#建立 yuyutei_series_links 資料表
-
+-- 4. YUYU-TEI 系列連結表（賣場連結爬蟲用）
 CREATE TABLE yuyutei_series_links (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -36,18 +47,20 @@ CREATE TABLE yuyutei_series_links (
     UNIQUE KEY unique_url (url)
 );
 
-#建立 拍賣商品主表
+-- 5. 拍賣商品主表（商品上架、管理用）
 CREATE TABLE auction_items (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     name VARCHAR(64) NOT NULL,
     description TEXT,
     price DECIMAL(10,2) NOT NULL,
+    stock INT NOT NULL DEFAULT 1,
+    is_sold BOOLEAN DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
-#建立 商品圖片表
+-- 6. 商品圖片表（多圖對應商品）
 CREATE TABLE auction_images (
     id INT AUTO_INCREMENT PRIMARY KEY,
     item_id INT NOT NULL,
@@ -55,13 +68,13 @@ CREATE TABLE auction_images (
     FOREIGN KEY (item_id) REFERENCES auction_items(id) ON DELETE CASCADE
 );
 
-#建立 標籤主表
+-- 7. 標籤主表（自定義商品標籤）
 CREATE TABLE auction_tags (
     id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(32) NOT NULL UNIQUE
 );
 
-#建立 商品對標籤多對多關聯表
+-- 8. 商品-標籤 多對多關聯表
 CREATE TABLE auction_item_tags (
     item_id INT NOT NULL,
     tag_id INT NOT NULL,
@@ -70,11 +83,11 @@ CREATE TABLE auction_item_tags (
     FOREIGN KEY (tag_id) REFERENCES auction_tags(id) ON DELETE CASCADE
 );
 
-#
+-- 9. 商品-系列 多對多關聯表（商品可標註多個官方系列）
 CREATE TABLE auction_item_series (
     item_id INT NOT NULL,
-    series_code VARCHAR(20) NOT NULL,
+    series_code VARCHAR(50) NOT NULL,
     PRIMARY KEY (item_id, series_code),
-    FOREIGN KEY (item_id) REFERENCES auction_items(id),
-    FOREIGN KEY (series_code) REFERENCES series(code)
+    FOREIGN KEY (item_id) REFERENCES auction_items(id) ON DELETE CASCADE,
+    FOREIGN KEY (series_code) REFERENCES series(code) ON DELETE CASCADE
 );

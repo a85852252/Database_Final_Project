@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
+
 :root {
     --primary-color: #00bfff;
     --light-blue: #b3ecff;
@@ -8,14 +9,13 @@
     --tab-inactive: rgba(102,223,255,0.5);
 }
 
+/* 全站基底 */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
     font-family: 'Nunito', Arial, sans-serif;
     background: linear-gradient(135deg, var(--light-blue), var(--mid-blue));
     color: #333;
-    margin: 0;
-    padding: 0;
 }
 
 .btn {
@@ -28,9 +28,12 @@ body {
   font-size: 1rem;
   cursor: pointer;
 }
-
 .btn:hover {
   background: var(--mid-blue);
+}
+.btn-edit {
+  margin-top: 14px;
+  width: 100%;
 }
 
 .container {
@@ -42,7 +45,7 @@ body {
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-
+/* nav dropdown（主選單用） */
 .dropdown {
     display: none;
     position: absolute;
@@ -66,12 +69,13 @@ body {
 }
 .dropdown li a:hover { background: rgba(0,0,0,0.1); }
 
+/* flash 訊息（彈窗） */
 .flash {
   padding: 0.6rem 1rem;
   margin-bottom: 0.5rem;
   border-radius: 4px;
-  opacity: 1; 
-  transition: opacity 0.5s ease-in-out; 
+  opacity: 1;
+  transition: opacity 0.5s ease-in-out;
 }
 #flash-box {
   background: #fff;
@@ -80,7 +84,6 @@ body {
   text-align: center;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
-
 #flash-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -91,20 +94,8 @@ body {
   align-items: center;
   z-index: 10000;
 }
-
-#flash-box .flash.success {
-  color: #155724;
-}
-#flash-box .flash.danger {
-  color: #721c24;
-}
-#flash-box .flash.warning {
-  color: #856404;
-}
-#flash-box .flash.info {
-  color: #0c5460;
-}
-
-#flash-box .flash.fade-out {
-  opacity: 0;
-}
+#flash-box .flash.success { color: #155724; }
+#flash-box .flash.danger { color: #721c24; }
+#flash-box .flash.warning { color: #856404; }
+#flash-box .flash.info { color: #0c5460; }
+#flash-box .flash.fade-out { opacity: 0; }

@@ -1,7 +1,7 @@
 .results-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-    grid-template-columns: repeat(7, 1fr);
+    /* grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 移除重複設定 */
+    grid-template-columns: repeat(7, 1fr); /* 若希望RWD，建議用 media query 做自適應 */
     gap: 1rem;
     justify-content: center;
     padding: 1.5rem 2rem;
@@ -12,20 +12,21 @@
 .card-result {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;  
-  min-height: 380px; 
-  background: #eef9ff;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px #0001;
-  padding: 1rem;transition: transform 0.5s cubic-bezier(0.24, 1.15, 0.29, 0.99);
+  align-items: center;
+  height: 100%;
+  min-height: 390px; /* 視你的排版可微調 */
 }
-
 .card-info {
+  width: 100%;
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
 }
+.card-actions {
+  width: 100%;
+  margin-top: auto;
+}
+
 .search-box {
     border: 1px solid var(--mid-blue);
     border-bottom: none;
@@ -59,8 +60,6 @@
 }
 .search-input:focus { outline: none; box-shadow: none; border: none; }
 
-
-
 .card-result:hover {
     transform: scale(1.03);
 }
@@ -76,16 +75,11 @@
   z-index: 10;
   box-shadow: 0 8px 24px rgba(0,0,0,0.18);
 }
-
 .card-name {
     font-weight: bold;
     margin-bottom: 0.3rem;
 }
-.card-code {
-    font-size: 0.8rem;
-    color: #777;
-    margin-bottom: 0.3rem;
-}
+
 .card-price {
     color: #007b5e;
     font-weight: 600;
@@ -112,20 +106,20 @@ img[loading="lazy"]:not([src=""]) {
 
 #back-to-top {
   position: fixed;
-  bottom: 40px;              
-  right: 40px;               
-  width: 60px;               
-  height: 60px;           
-  background: var(--primary-color);  
+  bottom: 40px;
+  right: 40px;
+  width: 60px;
+  height: 60px;
+  background: var(--primary-color);
   color: white;
   font-size: 20px;
   text-align: center;
-  line-height: 40px;         
-  border-radius: 50%;        
+  line-height: 40px;
+  border-radius: 50%;
   cursor: pointer;
-  display: none;            
+  display: none;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
-  z-index: 1000;             
+  z-index: 1000;
   transition: background 0.2s ease-in-out, opacity 0.2s ease-in-out;
   justify-content: center;
   align-items: center;
@@ -135,7 +129,6 @@ img[loading="lazy"]:not([src=""]) {
   background: var(--mid-blue);
   opacity: 0.9;
 }
-
 
 .btn-secondary {
   background: #fff;
